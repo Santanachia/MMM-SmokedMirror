@@ -19,8 +19,8 @@ To run the module, you need to add the following data to your config.js file.
   module: 'MMM-SmokedMirror',
   position: 'top_center', // you may choose any location
   config: {
-    lat: , // latitude as decimal degree, e.g. 50.062006
-    lng:  // longitude as decimal degree, e.g. 19.940984
+    lat: 50.062006, // latitude as decimal degree
+    lng: 19.940984 // longitude as decimal degree
   }
 }
 ```
@@ -34,6 +34,7 @@ You may want to set the following options in the config section as well:
 | `colors` | Makes pollution colorful<br><br>**Possible values:** `true` or `false`<br>**Default value:** `false` | 
 | `fontSize` | Sets the base font-size to a percent of the default value<br><br>**Default value:** `100` | 
 | `lang` | Change the language<br><br>**Possible values:** `en` or `pl` | 
+| `showValues` | Show level of pollution<br><br>**Possible values:** `true` or `false`<br>**Default value:** `false` | 
 | `updateInterval` | How often does the content needs to be fetched? (Minutes)<br><br>**Possible values:** `1` to `144`<br>**Default value:** `30` (30 minutes) | 
 
 ### ToDo

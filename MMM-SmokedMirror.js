@@ -8,6 +8,8 @@ Module.register('MMM-SmokedMirror', {
     AirlyIndex: false,
     colors: true,
     lang: 'en',
+    showValues: false,
+    debug: false,
   },
   start: function () {
     Log.info('Starting module: ' + this.name);
@@ -15,6 +17,8 @@ Module.register('MMM-SmokedMirror', {
     this.config.fontSize = parseInt(this.config.fontSize);
     this.loaded = false;
     this.errMsg = false;
+
+    this.sendSocketNotification('GET_META', { id: parseInt(this.data.index), apiKey: this.config.apiKey, lang: this.config.lang })
 
     // load data
     this.load();
@@ -31,6 +35,8 @@ Module.register('MMM-SmokedMirror', {
     }
   },
   socketNotificationReceived: function (notification, payload) {
+    if (this.config.debug)
+      console.log(notification, payload);
     switch (notification) {
       case 'DATA':
         if (payload.id === parseInt(this.data.index)) {
@@ -40,21 +46,26 @@ Module.register('MMM-SmokedMirror', {
           this.updateDom(this.animationSpeed);
         }
         break;
+      case 'META':
+        if (payload.id === parseInt(this.data.index)) {
+          this.data.meta = payload.meta;
+        }
+        break;
       case 'ERR':
         if (payload.type === 'config error')
           this.errMsg = payload.msg;
         console.log('error :(', payload)
         break;
       default:
-        console.log('wrong socketNotification', notification, payload)
+        console.log('wrong socketNotification: ' + notification)
         break;
     }
   },
   html: {
     table: '<table>\
-  <tbody style="font-size: {1}%;{2}"><tr><td><i class="fa fa-leaf"></i></td><td>{3}</td><td>{4}</td></tr>\
+  <tbody style="font-size: {1}%;{2}"><tr><td style="white-space: nowrap;"><span class="fa fa-leaf"></span> {3}</td><td>{4}</td></tr>\
   </tbody>\
-  <caption align="bottom" class="xsmall">{0}</caption>\
+  <caption align="bottom" class="xsmall" style="white-space: nowrap;">{0}</caption>\
 </table>',
   },
   getScripts: function () {
@@ -84,12 +95,13 @@ Module.register('MMM-SmokedMirror', {
       wrapper.className = 'dimmed light small';
     }
     else {
-      wrapper.innerHTML = '<span class="xsmall">' + this.translate(this.data.pollution.name) + '</span>'
+
+      wrapper.innerHTML = '<span class="xsmall">' + this.translate(this.data.pollution.name) + (this.config.showValues ? '' : ': ' + Math.round(this.data.pollution.value)) + '</span>'
       + this.html.table.format(
         this.translate("lastCheck") + moment().format('YYYY-MM-DD H:mm'),
         this.config.fontSize,
         this.config.colors ? ' color: ' + this.data.pollution.color : '',
-        this.data.pollution.description,
+        this.config.showValues ? Math.round(this.data.pollution.value) : this.data.pollution.description,
         this.data.pollution.advice
       )
     }

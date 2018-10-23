@@ -5,5 +5,6 @@
   "PIJP": "Polski Indeks Jakości Powietrza",
   "CAQI": "Common Air Quality Index",
   "AIRLY_CAQI": "Airly Common Air Quality Index",
-  "lastCheck": "Ostatnie sprawdzenie: "
+  "lastCheck": "Ostatnie sprawdzenie: ",
+  "of": "z"
 }
